@@ -1,0 +1,2 @@
+	This is where the source code uploaded on the microcontroller is located. The microcontroller (MCU) acts as a slave to the microprocessor. They interface through serial communication.
+	The MCU carries out all of the automation processes related to the maintenance of the plants within the system, ie. lights, watering. When there is a system change, in the case that a cell needs to be shut down, or a plant is added/removed, the MCU will receive an update from the microcontroller and the MCU will act accordingly.
