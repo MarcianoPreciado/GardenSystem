@@ -9,7 +9,7 @@ public:
   // Constructor/Destructor
   Lights(int pin)
     { _pin = pin; }
-  ~Lights();
+  ~Lights(){}
 
   // Getters/Setters
   bool is_on()
