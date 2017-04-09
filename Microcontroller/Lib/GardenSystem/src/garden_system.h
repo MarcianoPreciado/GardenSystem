@@ -4,6 +4,9 @@
 // Component Headers
 #include "components/valve.h"
 #include "components/lights.h"
+#include "components/pump.h"
+
+#include "garden_cell.h"
 
 class GardenSystem{
 public:
