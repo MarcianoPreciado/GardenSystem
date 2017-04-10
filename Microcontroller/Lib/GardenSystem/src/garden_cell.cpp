@@ -39,15 +39,35 @@ bool GardenCell::is_lighting(){
 }
 
 bool GardenCell::is_watering(){
-  return _watering;
   return watering_;
+}
+
+void GardenCell::set_lights_on_time(int hr, int mn){
+  lights_start_hr_ = hr;
+  lights_start_mn_ = mn;
+}
+
+void GardenCell::set_lights_off_time(int hr, int mn){
+  lights_stop_hr_ = hr;
+  lights_stop_mn_ = mn;
 }
 
 //==================== C R I T I C A L  F U N C T I O N S ====================//
 
-void GardenCell::water_plants(){
-  //float flow_rate = _pvalve_array->get_flow_rate(i);
-  //int duration = _plants[i].gal_per_period / flow_rate;
+/* Updates the state of the lights and the solenoids based on when they are
+ * scheduled to be activated/deactivated or opened/closed.
+ */
+void GardenCell::Update(){
+  if(plights_->is_on() && hour() >= lights_stop_hr_ && minute() >= lights_stop_mn_)
+    DeactivateLights();
+  else if(!plights_->is_on() && hour() >= lights_start_hr_ && minute() >= lights_start_mn_)
+    ActivateLights();
+  // TODO: add solenoid valve update functionality
+}
+
+void GardenCell::WaterPlants(){
+  //float flow_rate = pvalve_array_->get_flow_rate(i);
+  //int duration = plants_[i].gal_per_period / flow_rate;
 }
 
 void GardenCell::ActivateLights(){

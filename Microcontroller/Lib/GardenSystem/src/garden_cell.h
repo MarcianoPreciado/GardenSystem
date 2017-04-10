@@ -55,6 +55,8 @@ public:
   Plant get_plant_at(uint8_t pos);
   bool is_lighting();
   bool is_watering();
+  void set_lights_on_time(uint8_t hr, uint8_t mn);
+  void set_lights_off_time(uint8_t hr, uint8_t mn);
 
   // Critical Functions
   void Update();
@@ -84,6 +86,13 @@ private:
   int capacity_;
   int numplants_;
   bool is_on_;
+
+  // Default lighting start time is 7:30 AM
+  uint8_t lights_start_hr_ = 7;
+  uint8_t lights_start_mn_ = 30;
+  // Default lighting stop time is 9:00 PM
+  uint8_t lights_start_hr_ = 21;
+  uint8_t lights_start_mn_ = 0;
 
   void Schedule();
 };
