@@ -91,8 +91,8 @@ private:
   uint8_t lights_start_hr_ = 7;
   uint8_t lights_start_mn_ = 30;
   // Default lighting stop time is 9:00 PM
-  uint8_t lights_start_hr_ = 21;
-  uint8_t lights_start_mn_ = 0;
+  uint8_t lights_stop_hr_ = 21;
+  uint8_t lights_stop_mn_ = 0;
 
   void Schedule();
 };

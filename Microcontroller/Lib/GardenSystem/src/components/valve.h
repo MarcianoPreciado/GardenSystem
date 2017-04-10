@@ -15,7 +15,7 @@ public:
 
   // Getters/Setters
   int get_pin()
-    { return _pin; }
+    { return pin_; }
   void set_pin(int pin_num)
     { pin_ = pin_num; }
   float get_flow_rate()

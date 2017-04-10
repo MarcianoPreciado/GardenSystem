@@ -63,11 +63,14 @@ void setup() {
   Serial.print("Availablility is now: ");
   Serial.println(garden_cell.get_availability());
   Serial.println();
-}
 
-void loop() {
+  // Manually blink the lights
   garden_cell.ActivateLights();
   delay(900);
   garden_cell.DeactivateLights();
   delay(900);
+}
+
+void loop() {
+  garden_cell.Update();
 }

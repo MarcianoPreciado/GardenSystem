@@ -5,7 +5,7 @@ class Pump{
 public:
   // Constructor/Destructor
   Pump(uint8_t pin)
-    { _pin = pin; }
+    { pin_ = pin; }
   ~Pump();
 
   // Getters/Setters
@@ -18,9 +18,9 @@ public:
 
   // Critical Functions TODO: Fix for actual pump
   void Activate()
-    { digitalWrite(_pin, HIGH); is_on_ = true; }
+    { digitalWrite(pin_, HIGH); is_on_ = true; }
   void Deactivate()
-    { digitalWrite(_pin, LOW); is_on_ = false; }
+    { digitalWrite(pin_, LOW); is_on_ = false; }
 
 private:
   int pin_;

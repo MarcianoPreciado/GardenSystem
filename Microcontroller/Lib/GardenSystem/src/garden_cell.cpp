@@ -42,12 +42,12 @@ bool GardenCell::is_watering(){
   return watering_;
 }
 
-void GardenCell::set_lights_on_time(int hr, int mn){
+void GardenCell::set_lights_on_time(uint8_t hr, uint8_t mn){
   lights_start_hr_ = hr;
   lights_start_mn_ = mn;
 }
 
-void GardenCell::set_lights_off_time(int hr, int mn){
+void GardenCell::set_lights_off_time(uint8_t hr, uint8_t mn){
   lights_stop_hr_ = hr;
   lights_stop_mn_ = mn;
 }
