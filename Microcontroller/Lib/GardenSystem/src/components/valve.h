@@ -17,20 +17,20 @@ public:
   int get_pin()
     { return _pin; }
   void set_pin(int pin_num)
-    { _pin = pin_num; }
+    { pin_ = pin_num; }
   float get_flow_rate()
-    { return _flow_rate; }
+    { return flow_rate_; }
   bool is_open()
-    { return _is_open; }
+    { return is_open_; }
 
   // Critical Functions
-  void open_valve();
-  void close_valve();
+  void OpenValve();
+  void CloseValve();
 
 private:
-  int _pin;
-  float _flow_rate;
-  bool _is_open;
+  int pin_;
+  float flow_rate_;
+  bool is_open_;
   enum { OPEN = 1, CLOSE = 0 };
 };
 
@@ -46,19 +46,19 @@ public:
 
   // Getters
   int get_size()
-    { return _size; }
+    { return size_; }
   float get_flow_rate(int pos)
-    { return _valves[pos].get_flow_rate(); }
+    { return valves_[pos].get_flow_rate(); }
   bool is_open(int pos)
-    { return _valves[pos].is_open(); }
+    { return valves_[pos].is_open(); }
 
   // Critical Functions
-  void open_valve(int pos);
-  void close_valve(int pos);
+  void OpenValve(int pos);
+  void CloseValve(int pos);
 
 private:
-  Valve * _valves;
-  int _size = 0;
+  Valve *valves_;
+  int size_ = 0;
 };
 
 #endif

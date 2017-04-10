@@ -4,7 +4,7 @@
  * Each valve is represented as an LED, at pins 13, 12, and 11.
  *
  * Circuit:
- * Solenoid valves: pins 13, 12, and 121
+ * Solenoid valves: pins 13, 12, and 11
  *    each with a rate of emission of .5 gallons/hour.
  */
 #include "garden_system.h"
@@ -21,11 +21,11 @@ void setup() {
 
 void loop() {
   for(int i = 0; i < 3; i++){
-    v_array.open_valve(i);
+    v_array.OpenValve(i);
     delay(500);
   }
   for(int i = 0; i < 3; i++){
-    v_array.close_valve(i);
+    v_array.CloseValve(i);
     delay(500);
   }
 }

@@ -20,9 +20,9 @@ public:
     { _pin = pin; }
 
   // Critical Functions TODO: Fix for actual lights
-  void activate()
+  void Activate()
     { digitalWrite(_pin, HIGH); _is_on = true; }
-  void deactivate()
+  void Deactivate()
     { digitalWrite(_pin, LOW); _is_on = true; }
 
 private:

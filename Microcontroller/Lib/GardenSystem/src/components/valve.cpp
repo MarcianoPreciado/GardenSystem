@@ -4,30 +4,30 @@
 /* Constructor
  */
 Valve::Valve(int pin_num = -1, float flow_rate = 0){
-  _pin = pin_num;
-  pinMode(_pin, OUTPUT);
-  _flow_rate = flow_rate;
-  _is_open = false;
+  pin_ = pin_num;
+  pinMode(pin_, OUTPUT);
+  flow_rate_ = flow_rate;
+  is_open_ = false;
 }
 
 /* Destructor
  */
 Valve::~Valve(){
-  close_valve();
+  CloseValve();
 }
 
 /* Opens the valve. TODO: Change for actual solenoids
  */
-void Valve::open_valve(){
-  _is_open = true;
-  digitalWrite(_pin, (int)OPEN);
+void Valve::OpenValve(){
+  is_open_ = true;
+  digitalWrite(pin_, (int)OPEN);
 }
 
 /* Closes the valve. TODO: Change for actual solenoids
  */
-void Valve::close_valve(){
-  _is_open = false;
-  digitalWrite(_pin, (int)CLOSE);
+void Valve::CloseValve(){
+  is_open_ = false;
+  digitalWrite(pin_, (int)CLOSE);
 }
 
 //========================= V a l v e  A r r a y ==============================//
@@ -35,11 +35,11 @@ void Valve::close_valve(){
 /* Constructor
  */
 ValveArray::ValveArray(int num_valves, const int pins[], const float flow_rate[]){
-  _size = num_valves;
-  _valves = new Valve[_size];   // Allocate memory
+  size_ = num_valves;
+  valves_ = new Valve[size_];   // Allocate memory
   // Copy pin and flow rate info to each valve
-  for(int i = 0; i < _size; i++){
-    _valves[i] = Valve(pins[i], flow_rate[i]);
+  for(int i = 0; i < size_; i++){
+    valves_[i] = Valve(pins[i], flow_rate[i]);
   }
 }
 
@@ -47,20 +47,20 @@ ValveArray::ValveArray(int num_valves, const int pins[], const float flow_rate[]
  */
 ValveArray::~ValveArray(){
   // Close each valve
-  for(int i = 0; i < _size; i++){
-    close_valve(i);
+  for(int i = 0; i < size_; i++){
+    CloseValve(i);
   }
-  delete [] _valves; // Deallocate memory
+  delete [] valves_; // Deallocate memory
 }
 
 /* Opens the valve at the corresponding cell position.
  */
-void ValveArray::open_valve(int pos){
-  _valves[pos].open_valve();
+void ValveArray::OpenValve(int pos){
+  valves_[pos].OpenValve();
 }
 
 /* Closes the valve at the corresponding cell position.
  */
-void ValveArray::close_valve(int pos){
-  _valves[pos].close_valve();
+void ValveArray::CloseValve(int pos){
+  valves_[pos].CloseValve();
 }

@@ -49,7 +49,7 @@ public:
   GardenCell(uint8_t cell_num, ValveArray *valve_array, Lights *lights);
   ~GardenCell();
 
-  // Getters/Setters
+  // Accessors
   int get_capacity();
   int get_availability();
   Plant get_plant_at(uint8_t pos);
@@ -57,35 +57,35 @@ public:
   bool is_watering();
 
   // Critical Functions
-  void update();
-  void water_plants();
-  void activate_lights();
-  void deactivate_lights();
+  void Update();
+  void WaterPlants();
+  void ActivateLights();
+  void DeactivateLights();
 
   // Emergency Functions
-  void deactivate();
-  void activate();
+  void DeactivateCell();
+  void ActivateCell();
 
   // Operator Overloading
   GardenCell & operator+=(const Plant & plant);
   GardenCell & operator-=(const Plant & plant);
 private:
   // Pointers to components
-  ValveArray *_pvalve_array;
-  Lights *_plights;
+  ValveArray *pvalve_array_;
+  Lights *plights_;
   // Dynamic arrays (use operator new)
-  Plant *_plants;
-  time_t *_water_stop_times;
+  Plant *plants_;
+  time_t *water_stop_times_;
 
-  bool _lights_on;
-  bool _watering;
+  bool lights_on_;
+  bool watering_;
 
-  uint8_t _cell_num;
-  int _capacity;
-  int _num_plants;
-  bool _is_on;
+  uint8_t cell_num_;
+  int capacity_;
+  int numplants_;
+  bool is_on_;
 
-  void schedule();
+  void Schedule();
 };
 
 #endif

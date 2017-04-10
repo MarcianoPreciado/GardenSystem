@@ -14,17 +14,17 @@ const uint8_t led_pin = 13;
  void setup(){
    Serial.begin(9600);
    Serial.println("Light begins activated.");
-   light.activate();
+   light.Activate();
  }
 
  void loop(){
    if(light.is_on()){
      Serial.println("Deactivating Light");
-     light.deactivate();
+     light.Deactivate();
    }
    else{
      Serial.println("Activating Light");
-     light.activate();
+     light.Activate();
    }
    delay(1000);
  }

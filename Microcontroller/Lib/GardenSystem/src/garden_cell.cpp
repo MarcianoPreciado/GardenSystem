@@ -5,41 +5,42 @@
 #include "components/lights.h"
 
 GardenCell::GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *plights){
-  _capacity = pvalve_array->get_size();
-  _cell_num = cell_num;
+  capacity_ = pvalve_array->get_size();
+  cell_num_ = cell_num;
   // Assign Components
-  _pvalve_array = pvalve_array;
-  _plights = plights;
-  _plants = new Plant[_capacity];
-  _water_stop_times = new time_t[_capacity];
-  _num_plants = 0;
+  pvalve_array_ = pvalve_array;
+  plights_ = plights;
+  plants_ = new Plant[capacity_];
+  water_stop_times_ = new time_t[capacity_];
+  numplants_ = 0;
 }
 
 GardenCell::~GardenCell(){
-  delete [] _plants;
-  delete [] _water_stop_times;
+  delete [] plants_;
+  delete [] water_stop_times_;
 }
 
-//======================== I N F O R M A T I O N A L =========================//
+//============================ A C C E S S O R S =============================//
 
 int GardenCell::get_capacity(){
-  return _capacity;
+  return capacity_;
 }
 
 int GardenCell::get_availability(){
-  return _capacity - _num_plants;
+  return capacity_ - numplants_;
 }
 
 Plant GardenCell::get_plant_at(uint8_t pos){
-  return _plants[pos];
+  return plants_[pos];
 }
 
 bool GardenCell::is_lighting(){
-  return _plights->is_on();
+  return plights_->is_on();
 }
 
 bool GardenCell::is_watering(){
   return _watering;
+  return watering_;
 }
 
 //==================== C R I T I C A L  F U N C T I O N S ====================//
@@ -49,12 +50,16 @@ void GardenCell::water_plants(){
   //int duration = _plants[i].gal_per_period / flow_rate;
 }
 
-void GardenCell::activate_lights(){
-  _plights->activate();
+void GardenCell::ActivateLights(){
+  plights_->Activate();
 }
 
-void GardenCell::deactivate_lights(){
-  _plights->deactivate();
+void GardenCell::DeactivateLights(){
+  plights_->Deactivate();
+}
+
+void GardenCell::Schedule(){
+
 }
 
 //===================== O P E R A T O R  O V E R L O A D =====================//
@@ -66,10 +71,10 @@ void GardenCell::deactivate_lights(){
 GardenCell &GardenCell::operator+=(const Plant &new_plant){
   uint8_t pos = new_plant.position;
   // If the requested position is empty, insert the new plant there
-  if(this->_plants[pos].is_empty){
-    this->_plants[pos] = new_plant;
-    this->_num_plants ++;
-    this->schedule();
+  if(this->plants_[pos].is_empty){
+    this->plants_[pos] = new_plant;
+    this->numplants_ ++;
+    this->Schedule();
   }
   return *this;
 }
@@ -79,7 +84,7 @@ GardenCell &GardenCell::operator+=(const Plant &new_plant){
  */
 GardenCell &GardenCell::operator-=(const Plant &plant){
   uint8_t pos = plant.position;
-  this->_plants[pos].is_empty = true;;
-  this->_num_plants --;
+  this->plants_[pos].is_empty = true;;
+  this->numplants_ --;
   return *this;
 }
