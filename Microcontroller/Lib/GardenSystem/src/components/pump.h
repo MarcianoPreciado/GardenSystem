@@ -5,7 +5,7 @@ class Pump{
 public:
   // Constructor/Destructor
   Pump(uint8_t pin)
-    { pin_ = pin; }
+    { pin_ = pin; pinMode(pin_, OUTPUT); }
   ~Pump();
 
   // Getters/Setters

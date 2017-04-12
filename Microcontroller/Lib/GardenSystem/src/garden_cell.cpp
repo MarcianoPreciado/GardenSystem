@@ -12,7 +12,7 @@ GardenCell::GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *pligh
   plights_ = plights;
   plants_ = new Plant[capacity_];
   water_stop_times_ = new time_t[capacity_];
-  numplants_ = 0;
+  num_plants_ = 0;
 }
 
 GardenCell::~GardenCell(){
@@ -22,15 +22,19 @@ GardenCell::~GardenCell(){
 
 //============================ A C C E S S O R S =============================//
 
-int GardenCell::get_capacity(){
+uint8_t GardenCell::get_capacity(){
   return capacity_;
 }
 
-int GardenCell::get_availability(){
-  return capacity_ - numplants_;
+uint8_t GardenCell::get_availability(){
+  return capacity_ - num_plants_;
 }
 
-Plant GardenCell::get_plant_at(uint8_t pos){
+uint8_t GardenCell::get_cell_num(){
+  return cell_num_;
+}
+
+Plant GardenCell::get_plant(uint8_t pos){
   return plants_[pos];
 }
 
@@ -93,18 +97,18 @@ GardenCell &GardenCell::operator+=(const Plant &new_plant){
   // If the requested position is empty, insert the new plant there
   if(this->plants_[pos].is_empty){
     this->plants_[pos] = new_plant;
-    this->numplants_ ++;
+    this->num_plants_ ++;
     this->Schedule();
   }
   return *this;
 }
 
 /* Removes the desired plant from the garden cell and updates state variables
- * Ex. garden_cell1 -= garden_cell1.get_plant_at(some_pos);
+ * Ex. garden_cell1 -= garden_cell1.get_plant(some_pos);
  */
 GardenCell &GardenCell::operator-=(const Plant &plant){
   uint8_t pos = plant.position;
   this->plants_[pos].is_empty = true;;
-  this->numplants_ --;
+  this->num_plants_ --;
   return *this;
 }

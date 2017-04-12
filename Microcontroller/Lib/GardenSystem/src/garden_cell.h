@@ -50,9 +50,10 @@ public:
   ~GardenCell();
 
   // Accessors
-  int get_capacity();
-  int get_availability();
-  Plant get_plant_at(uint8_t pos);
+  uint8_t get_capacity();
+  uint8_t get_availability();
+  uint8_t get_cell_num();
+  Plant get_plant(uint8_t pos);
   bool is_lighting();
   bool is_watering();
   void set_lights_on_time(uint8_t hr, uint8_t mn);
@@ -65,12 +66,12 @@ public:
   void DeactivateLights();
 
   // Emergency Functions
-  void DeactivateCell();
-  void ActivateCell();
+  void Deactivate();
+  void Activate();
 
   // Operator Overloading
-  GardenCell & operator+=(const Plant & plant);
-  GardenCell & operator-=(const Plant & plant);
+  GardenCell & operator+=(const Plant &plant);
+  GardenCell & operator-=(const Plant &plant);
 private:
   // Pointers to components
   ValveArray *pvalve_array_;
@@ -83,8 +84,8 @@ private:
   bool watering_;
 
   uint8_t cell_num_;
-  int capacity_;
-  int numplants_;
+  uint8_t capacity_;
+  uint8_t num_plants_;
   bool is_on_;
 
   // Default lighting start time is 7:30 AM

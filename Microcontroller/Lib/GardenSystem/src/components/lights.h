@@ -8,26 +8,26 @@ class Lights{
 public:
   // Constructor/Destructor
   Lights(int pin)
-    { _pin = pin; }
+    { pin_ = pin; pinMode(pin_, OUTPUT); }
   ~Lights(){}
 
   // Getters/Setters
   bool is_on()
-    { return _is_on; }
+    { return is_on_; }
   int get_pin()
-    { return _pin; }
+    { return pin_; }
   void set_pin(int pin)
-    { _pin = pin; }
+    { pin_ = pin; }
 
   // Critical Functions TODO: Fix for actual lights
   void Activate()
-    { digitalWrite(_pin, HIGH); _is_on = true; }
+    { digitalWrite(pin_, HIGH); is_on_ = true; }
   void Deactivate()
-    { digitalWrite(_pin, LOW); _is_on = true; }
+    { digitalWrite(pin_, LOW); is_on_ = false; }
 
 private:
-  int _pin;
-  bool _is_on;
+  int pin_;
+  bool is_on_;
 
 };
 
