@@ -1,0 +1,93 @@
+-- Plants
+  To add John Doe's plant to position 1 in cell 0 that requires 1.0 gallons every 2 days:
+  >> {"type":"plant",
+      "op":"add",
+      "owner":"John Doe",
+      "cell":0,
+      "position":1,
+      "gal":1.0,
+      "period":2}
+
+  To remove a plant from position 2 in cell 3:
+  >> {"type":"plant",
+      "op":"remove",
+      "cell":3,
+      "position":2}
+
+-- Cells
+  -- Addition/Subtraction
+    To add a cell numbered 3
+    With 6 valves, pins are { 2, 3, 4, 5, 6, 7 } with flow rates of { 1.0, 0.5, 0.5, 1.0, 0.5, 0.5}
+    With lights controlled by pin 8:
+    >> {"type":"cell",
+        "op":"add",
+        "num_valves":6,
+        "spins":[2,3,4,5,6,7],
+        "flowrate":[1.0,0.5,0.5,1.0,0.5,0.5],
+        "lpin":8,
+        "cell":3}
+
+    To remove a cell numbered 4:
+    >> {"type":"cell",
+        "op":"remove",
+        "cell":4}
+
+  -- Modification
+    To deactivate cell 2:
+    >> {"type":"cell",
+        "op":"deactivate",
+        "cell":2}
+
+    To reactivate cell 2:
+    >> {"type":"cell",
+        "op":"activate",
+        "cell":2}
+
+    To change lighting start time to 10:30 AM at cell 4:
+    >> {"type":"cell",
+        "op":"setlighttime",
+        "hr":10,
+        "min":30,
+        "cell":4}
+
+    To change lights-off time to 9:00 PM at cell 1:
+    >> {"type":"cell",
+        "op":"setdarktime",
+        "hr":21,
+        "min":0,
+        "cell":1}
+
+  -- Request Info
+    To get all cell information from cell 3 created earlier:
+    >> {"type":"cell",
+        "op":"status",
+        "cell":3}
+    You will receive:
+    >> {"type":"cellstatus",
+        "cell":5,
+        "capacity":6,
+        "plants":0,
+        "ison":true,
+        "watering":false,
+        "lightson":true
+        "spins":[2,3,4,5,6,7],
+        "flowrate":[1.0,0.5,0.5,1.0,0.5,0.5],
+        "lpin":8,
+        "lighthr":7,"lightmin":30,
+        "darkhr":21,"darkmin":0}
+
+    To get all plant information from cell 5 with 2 plants:
+    >> {"type":"cell",
+        "op":"plants"}
+    You will receive 2 messages like this one:
+    >> {"type":"cellplant",
+        "owner":"Johnny Bravo",
+        "cell":5,
+        "position":0,
+        "gal":0.25,
+        "period":2,
+        "is_scheduled":true,
+        "schedule":1492224209}
+    "schedule" is a time_t number for the next watering time.
+
+--System
