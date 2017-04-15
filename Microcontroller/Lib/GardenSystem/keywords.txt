@@ -24,7 +24,9 @@ ActivateCell	KEYWORD2
 DeactivateCell	KEYWORD2
 get_capacity	KEYWORD2
 get_availability	KEYWORD2
-get_plant_at	KEYWORD2
+get_plant	KEYWORD2
+get_cell	KEYWORD2
+get_num_plants	KEYWORD2
 is_lighting	KEYWORD2
 is_watering	KEYWORD2
 set_lights_on_time	KEYWORD2

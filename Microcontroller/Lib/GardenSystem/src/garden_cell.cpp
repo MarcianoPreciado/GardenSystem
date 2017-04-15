@@ -30,6 +30,10 @@ uint8_t GardenCell::get_availability(){
   return capacity_ - num_plants_;
 }
 
+uint8_t GardenCell::get_num_plants(){
+  return num_plants_;
+}
+
 uint8_t GardenCell::get_cell_num(){
   return cell_num_;
 }
@@ -84,6 +88,22 @@ void GardenCell::DeactivateLights(){
 
 void GardenCell::Schedule(){
 
+}
+
+//=================== E M E R G E N C Y  F U N C T I O N S ===================//
+
+/*
+ */
+void GardenCell::Deactivate(){
+  is_on_ = false;
+  // TODO: Send event message
+}
+
+/*
+ */
+void GardenCell::Activate(){
+  is_on_ = true;
+  // TODO: Send event message
 }
 
 //===================== O P E R A T O R  O V E R L O A D =====================//

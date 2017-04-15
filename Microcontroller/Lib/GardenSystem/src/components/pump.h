@@ -6,7 +6,7 @@ public:
   // Constructor/Destructor
   Pump(uint8_t pin)
     { pin_ = pin; pinMode(pin_, OUTPUT); }
-  ~Pump();
+  ~Pump(){}
 
   // Getters/Setters
   bool is_on()

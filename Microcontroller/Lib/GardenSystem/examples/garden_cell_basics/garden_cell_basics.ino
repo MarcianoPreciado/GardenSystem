@@ -37,6 +37,8 @@ void setup() {
   // Initialize serial comm
   Serial.begin(9600);
 
+  
+
   Serial.print("Capacity: ");
   Serial.println(garden_cell.get_capacity());
   Serial.print("Availablility: ");
@@ -48,17 +50,17 @@ void setup() {
   garden_cell += plant0;
   garden_cell += plant1;
   Serial.print("Plant0 needs to be watered every ");
-  Serial.print(garden_cell.get_plant_at(0).water_period);
+  Serial.print(garden_cell.get_plant(0).water_period);
   Serial.println(" days.");
   Serial.print("Plant1 needs to be watered with ");
-  Serial.print(garden_cell.get_plant_at(1).gal_per_period);
+  Serial.print(garden_cell.get_plant(1).gal_per_period);
   Serial.println(" gallons each time");
   Serial.print("Availablility is now: ");
   Serial.println(garden_cell.get_availability());
   Serial.println();
 
   // Remove a plant from the garden_cell
-  garden_cell -= garden_cell.get_plant_at(0);
+  garden_cell -= garden_cell.get_plant(0);
   Serial.println("Removing plant 0");
   Serial.print("Availablility is now: ");
   Serial.println(garden_cell.get_availability());

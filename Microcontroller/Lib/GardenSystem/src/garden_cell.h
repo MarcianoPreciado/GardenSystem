@@ -52,6 +52,7 @@ public:
   // Accessors
   uint8_t get_capacity();
   uint8_t get_availability();
+  uint8_t get_num_plants();
   uint8_t get_cell_num();
   Plant get_plant(uint8_t pos);
   bool is_lighting();
