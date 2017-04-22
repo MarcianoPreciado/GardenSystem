@@ -10,13 +10,14 @@
 class Valve{
 public:
   // Constructor/Destructor
-  Valve(int pin_num, float flow_rate);
+  Valve(uint8_t pin_num, float flow_rate);
+  Valve(uint8_t &rpin_num, float &rflow_rate);
   ~Valve();
 
   // Getters/Setters
-  int get_pin()
+  uint8_t get_pin()
     { return pin_; }
-  void set_pin(int pin_num)
+  void set_pin(uint8_t pin_num)
     { pin_ = pin_num; }
   float get_flow_rate()
     { return flow_rate_; }
@@ -28,7 +29,7 @@ public:
   void CloseValve();
 
 private:
-  int pin_;
+  uint8_t pin_;
   float flow_rate_;
   bool is_open_;
   enum { OPEN = 1, CLOSE = 0 };
@@ -41,24 +42,24 @@ private:
 class ValveArray{
 public:
   // Constructor/Destructor
-  ValveArray(int num_valves, const int pins[], const float flow_rate[]);
+  ValveArray(uint8_t num_valves, const uint8_t pins[], const float flow_rate[]);
   ~ValveArray();
 
   // Getters
-  int get_size()
+  uint8_t get_size()
     { return size_; }
-  float get_flow_rate(int pos)
+  float get_flow_rate(uint8_t pos)
     { return valves_[pos].get_flow_rate(); }
-  bool is_open(int pos)
+  bool is_open(uint8_t pos)
     { return valves_[pos].is_open(); }
 
   // Critical Functions
-  void OpenValve(int pos);
-  void CloseValve(int pos);
+  void OpenValve(uint8_t pos);
+  void CloseValve(uint8_t pos);
 
 private:
   Valve *valves_;
-  int size_ = 0;
+  uint8_t size_ = 0;
 };
 
 #endif
