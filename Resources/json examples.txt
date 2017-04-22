@@ -81,7 +81,8 @@
     >> {"kind":"cell",
         "op":"plants"}
     You will receive 2 messages like this one:
-    >> {"kind":"cellplant",
+    >> {"kind":"cell"
+        "op":plant",
         "owner":"Johnny Bravo",
         "cell":5,
         "position":0,
@@ -90,5 +91,16 @@
         "is_scheduled":true,
         "schedule":1492224209}
     "schedule" is a time_t number for the next watering time.
+
+    To request sensor information from cell 5
+    >> {"kind":"cell"
+        "op":"sensors"
+        "cell":5}
+    You will receive a message much like
+    >> {"kind":"cell"
+        "op":"sensors"
+        "cell":5
+        "temp":23.3
+        "light":10000.0}
 
 --System
