@@ -11,18 +11,19 @@
 // TODO: Make sort procedure more efficient. (Takes too long currently)
 class GardenSystem{
 public:
-  GardenSystem(Pump *ppump);
+  GardenSystem(){}
+  static void Begin(Pump *ppump);
   // Accessors
-  int get_num_cells();
-  GardenCell &get_cell(uint8_t pos);
-  GardenCell *get_cell_ptr(uint8_t pos);
+  static int get_num_cells();
+  static GardenCell &get_cell(uint8_t pos);
+  static GardenCell *get_cell_ptr(uint8_t pos);
 
   // Critical Functions
-  void Update();
+  static void Update();
 
   // Emergency Functions
-  void Deactivate();
-  void Activate();
+  static void Deactivate();
+  static void Activate();
 
   /* Add a GardenCell object to the system. It will be stored as a pointer in the
    * pgarden_cells_ vector and be supported by the system. Re-sorts vector by
@@ -45,11 +46,15 @@ public:
   * Ex. System -= System.get_cell_ptr(pos);
   */
   GardenSystem &operator-=(GardenCell *pg_c){
-   // TODO: "find" index may be incorrect.
-   //        add event message
-   auto ind = std::find(pgarden_cells_.begin(), pgarden_cells_.end(), pg_c);
-   pgarden_cells_.erase(ind);
-   num_cells_ --;
+    // TODO: add event message
+    auto ind = std::find(pgarden_cells_.begin(), pgarden_cells_.end(), pg_c);
+    if(ind != pgarden_cells_.end()){
+      pgarden_cells_.erase(ind);
+      num_cells_ --;
+    }
+    else{
+      // TODO: Message an error, incorrect removal
+    }
    return *this;
   }
   void PrintCells(){
@@ -57,14 +62,22 @@ public:
       Serial.println(pgarden_cells_[i]->get_cell_num());
     }
   }
+  GardenSystem &operator+=(Plant p){
+    (*pgarden_cells_[p.cell]) += p;
+    return *this;
+  }
+  GardenSystem &operator-=(Plant p){
+    (*pgarden_cells_[p.cell]) -= p;
+    return *this;
+  }
 private:
   // Pointer to contained pump
-   Pump *ppump_;
+   static Pump *ppump_;
   // GardenCell pointer vector
-   std::vector<GardenCell*> pgarden_cells_;
+   static std::vector<GardenCell*> pgarden_cells_;
 
-   uint8_t num_cells_ = 0;
-   bool is_on_ = false;
+   static uint8_t num_cells_;
+   static bool is_on_;
 };
-
+extern GardenSystem garden_system;
 #endif

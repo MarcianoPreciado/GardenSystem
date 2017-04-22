@@ -11,7 +11,13 @@
 #include "comm_link.h"
 #include "garden_system.h"
 
-GardenSystem::GardenSystem(Pump *ppump){
+Pump * GardenSystem::ppump_;
+std::vector<GardenCell*> GardenSystem::pgarden_cells_;
+bool GardenSystem::is_on_ = false;
+uint8_t GardenSystem::num_cells_ = 0;
+//GardenSystem garden_system;
+
+void GardenSystem::Begin(Pump *ppump){
   num_cells_ = 0;
   is_on_ = true;
   ppump_ = ppump;
@@ -36,7 +42,11 @@ GardenCell *GardenSystem::get_cell_ptr(uint8_t pos){
   // TODO: finish
   auto CellSearchLamda = [pos](GardenCell *pg_c){return pg_c->get_cell_num() ==  pos;};
   auto ind = std::find_if(pgarden_cells_.begin(), pgarden_cells_.end(), CellSearchLamda);
-  return *ind;
+  if(ind != pgarden_cells_.end()){
+    return *ind;
+  }
+  else
+    return nullptr;
 }
 
 //==================== C R I T I C A L  F U N C T I O N S ====================//
@@ -50,7 +60,6 @@ void GardenSystem::Update(){
     // TODO: finish
     for(int i = 0; i < num_cells_; i++){
       pgarden_cells_[i]->Update();
-      Serial.println("yes");
     }
   }
 }
