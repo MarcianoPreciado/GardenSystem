@@ -3,6 +3,7 @@
 #include "garden_cell.h"
 #include "components/valve.h"
 #include "components/lights.h"
+#include "components/sensors.h"
 
 GardenCell::GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *plights){
   capacity_ = pvalve_array->get_size();
@@ -18,35 +19,53 @@ GardenCell::GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *pligh
 GardenCell::~GardenCell(){
   delete [] plants_;
   delete [] water_stop_times_;
+  if(has_light_sensor_)
+    delete plight_sensor_;
+  if(has_temp_sensor_)
+    delete ptemp_sensor_;
 }
 
 //============================ A C C E S S O R S =============================//
 
-uint8_t GardenCell::get_capacity(){
+uint8_t GardenCell::get_capacity() const{
   return capacity_;
 }
 
-uint8_t GardenCell::get_availability(){
-  return capacity_ - num_plants_;
+uint8_t GardenCell::get_availability() const{
+  return (capacity_ - num_plants_);
 }
 
-uint8_t GardenCell::get_num_plants(){
+uint8_t GardenCell::get_num_plants() const{
   return num_plants_;
 }
 
-uint8_t GardenCell::get_cell_num(){
+uint8_t GardenCell::get_cell_num() const{
   return cell_num_;
 }
 
-Plant GardenCell::get_plant(uint8_t pos){
+Plant GardenCell::get_plant(uint8_t pos) const{
   return plants_[pos];
 }
 
-bool GardenCell::is_lighting(){
+double GardenCell::get_temp_val() const{
+  if(has_temp_sensor_){
+    return ptemp_sensor_->get_val();
+  }
+  return 0.0;
+}
+
+double GardenCell::get_light_val() const{
+  if(has_light_sensor_){
+    return plight_sensor_->get_val();
+  }
+  return 0.0;
+}
+
+bool GardenCell::is_lighting() const{
   return plights_->is_on();
 }
 
-bool GardenCell::is_watering(){
+bool GardenCell::is_watering() const{
   return watering_;
 }
 
@@ -58,6 +77,24 @@ void GardenCell::set_lights_on_time(uint8_t hr, uint8_t mn){
 void GardenCell::set_lights_off_time(uint8_t hr, uint8_t mn){
   lights_stop_hr_ = hr;
   lights_stop_mn_ = mn;
+}
+
+void GardenCell::set_temp_sensor(TempSensor *pt_s){
+  ptemp_sensor_ = pt_s;
+  has_temp_sensor_ = true;
+}
+
+void GardenCell::set_light_sensor(LightSensor *pl_s){
+  plight_sensor_ = pl_s;
+  has_light_sensor_ = true;
+}
+
+bool GardenCell::has_temp_sensor(){
+  return has_temp_sensor_;
+}
+
+bool GardenCell::has_light_sensor(){
+  return has_light_sensor_;
 }
 
 //==================== C R I T I C A L  F U N C T I O N S ====================//

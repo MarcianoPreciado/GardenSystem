@@ -4,6 +4,7 @@
 #include <Time.h>
 #include "components/valve.h"
 #include "components/lights.h"
+#include "components/sensors.h"
 
 
  /* Plant struct
@@ -50,15 +51,21 @@ public:
   ~GardenCell();
 
   // Accessors
-  uint8_t get_capacity();
-  uint8_t get_availability();
-  uint8_t get_num_plants();
-  uint8_t get_cell_num();
-  Plant get_plant(uint8_t pos);
-  bool is_lighting();
-  bool is_watering();
+  uint8_t get_capacity() const;
+  uint8_t get_availability() const;
+  uint8_t get_num_plants() const;
+  uint8_t get_cell_num() const;
+  Plant get_plant(uint8_t pos) const;
+  double get_temp_val() const;
+  double get_light_val() const;
+  bool is_lighting() const;
+  bool is_watering() const;
   void set_lights_on_time(uint8_t hr, uint8_t mn);
   void set_lights_off_time(uint8_t hr, uint8_t mn);
+  void set_temp_sensor(TempSensor *pt_s);
+  void set_light_sensor(LightSensor *pl_s);
+  bool has_temp_sensor();
+  bool has_light_sensor();
 
   // Critical Functions
   void Update();
@@ -77,12 +84,17 @@ private:
   // Pointers to components
   ValveArray *pvalve_array_;
   Lights *plights_;
+  TempSensor *ptemp_sensor_;
+  LightSensor *plight_sensor_;
+
   // Dynamic arrays (use operator new)
   Plant *plants_;
   time_t *water_stop_times_;
 
-  bool lights_on_;
-  bool watering_;
+  bool lights_on_ = false;
+  bool watering_ = false;
+  bool has_light_sensor_ = false;
+  bool has_temp_sensor_ = false;
 
   uint8_t cell_num_;
   uint8_t capacity_;
