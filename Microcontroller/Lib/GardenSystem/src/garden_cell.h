@@ -55,17 +55,22 @@ public:
   uint8_t get_availability() const;
   uint8_t get_num_plants() const;
   uint8_t get_cell_num() const;
-  Plant get_plant(uint8_t pos) const;
+  Plant *get_plant(uint8_t pos) const;
   double get_temp_val() const;
   double get_light_val() const;
+
+  bool has_temp_sensor();
+  bool has_light_sensor();
+
   bool is_lighting() const;
   bool is_watering() const;
+  bool is_active() const;
+
   void set_lights_on_time(uint8_t hr, uint8_t mn);
   void set_lights_off_time(uint8_t hr, uint8_t mn);
   void set_temp_sensor(TempSensor *pt_s);
   void set_light_sensor(LightSensor *pl_s);
-  bool has_temp_sensor();
-  bool has_light_sensor();
+
 
   // Critical Functions
   void Update();
@@ -78,8 +83,8 @@ public:
   void Activate();
 
   // Operator Overloading
-  GardenCell & operator+=(const Plant &plant);
-  GardenCell & operator-=(const Plant &plant);
+  GardenCell & operator+=(Plant *pplant);
+  GardenCell & operator-=(Plant *pplant);
 private:
   // Pointers to components
   ValveArray *pvalve_array_;
@@ -88,7 +93,7 @@ private:
   LightSensor *plight_sensor_;
 
   // Dynamic arrays (use operator new)
-  Plant *plants_;
+  Plant **pplants_;
   time_t *water_stop_times_;
 
   bool lights_on_ = false;
@@ -98,15 +103,13 @@ private:
 
   uint8_t cell_num_;
   uint8_t capacity_;
-  uint8_t num_plants_;
-  bool is_on_;
+  uint8_t num_plants_ = 0;
+  bool is_active_ = true;
 
   // Default lighting start time is 7:30 AM
-  uint8_t lights_start_hr_ = 7;
-  uint8_t lights_start_mn_ = 30;
+  uint8_t lights_start_tm_[2] = {7, 30};
   // Default lighting stop time is 9:00 PM
-  uint8_t lights_stop_hr_ = 21;
-  uint8_t lights_stop_mn_ = 0;
+  uint8_t lights_stop_tm_[2] = {21, 0};
 
   void Schedule();
 };

@@ -19,20 +19,25 @@
 #include "garden_system.h"
 #include "comm_link.h"
 
-// Construct a garden cell and all of its necessary components.
+// Define pins and important values
 uint8_t num_valves = 3;
+uint8_t * v_pins = new uint8_t[3] {12, 11, 10};
+float * v_rates = new float[3] {0.5, 0.5, 0.5};
+uint8_t lights_pin = LED_BUILTIN;
 uint8_t pump_pin = 4;
-uint8_t * pins = new uint8_t[3] {12, 11, 10};
-float * rates = new float[3] {0.5, 0.5, 0.5};
-ValveArray v_array(num_valves, pins, rates);
-Lights lights(LED_BUILTIN);
-LightSensor light_sensor;
+
+/* Construct a garden cell and all of its necessary components. */
+ValveArray v_array(num_valves, v_pins, v_rates);
+Lights lights(lights_pin);
 GardenCell garden_cell(0, &v_array, &lights);
+LightSensor light_sensor;
+
+// Construct pump for garden_system
 Pump pump(pump_pin);
 
 // Create a plant owned by Someone, for cell 0, position 0, needs
-// 1 gallon every time its watered, and needs to be watered every 4 days
-Plant plant0("Someone", 0, 0, 1, 4);
+// 1 gallon every time its watered, and needs to be watered every 3 days
+Plant plant0("Someone", 0, 0, 1, 3);
 // Create a plant owned by Someone, for cell 0, position 1, needs
 // 1/2 gallon every time its watered, and needs to be watered every 2 days
 Plant plant1("Somebody", 0, 1, 0.5, 2);
@@ -47,8 +52,8 @@ void setup() {
   CommLink::Begin(9600, &garden_system);
 
   garden_system += &garden_cell;
-  garden_system += plant0;
-  garden_system += plant1;
+  garden_system += &plant0;
+  garden_system += &plant1;
 
   Serial.println("getting light sensor");
   while (!light_sensor.Begin()) {

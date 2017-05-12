@@ -62,12 +62,13 @@ public:
       Serial.println(pgarden_cells_[i]->get_cell_num());
     }
   }
-  GardenSystem &operator+=(Plant p){
-    (*pgarden_cells_[p.cell]) += p;
+  // Add plant to system,
+  GardenSystem &operator+=(Plant *pplant){
+    (*pgarden_cells_[pplant->cell]) += pplant;
     return *this;
   }
-  GardenSystem &operator-=(Plant p){
-    (*pgarden_cells_[p.cell]) -= p;
+  GardenSystem &operator-=(Plant *pplant){
+    (*pgarden_cells_[pplant->cell]) -= pplant;
     return *this;
   }
 private:

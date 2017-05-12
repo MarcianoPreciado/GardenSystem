@@ -62,13 +62,14 @@ void CommLink::PlantOperation(JsonObject &root){
     float gal_per_period = root["gal"];
     uint8_t water_period = root["period"];
     // Construct new plant
-    Plant p(owner, cell, position, gal_per_period, water_period);
+    Plant *pplant = new Plant(owner, cell, position, gal_per_period, water_period);
     // Copy plant into requested cell and position
-    pg_s_->get_cell(cell) += p;
+    pg_s_->get_cell(cell) += pplant;
   }
   else if(op.equals("remove")){
     // Remove the plant from the requested cell and position
-    pg_s_->get_cell(cell) -= pg_s_->get_cell(cell).get_plant(position);
+    Plant *pplant = pg_s_->get_cell(cell).get_plant(position);
+    pg_s_->get_cell(cell) -= pplant;
   }
 }
 
