@@ -4,6 +4,7 @@
 #include <Wire.h>
 #include <Adafruit_MCP9808.h>
 #include <TSL2561.h>
+//#include <freqmeasure.h>
 
 class Sensor{
 public:
@@ -30,6 +31,8 @@ public:
 protected:
   uint8_t pin_;
 };
+
+//----------------------------- SPECIFIC SENSORS -----------------------------//
 
 class TempSensor: public I2cSensor{
 private:

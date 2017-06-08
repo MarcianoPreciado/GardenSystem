@@ -16,26 +16,21 @@
  * int water_period;      How many days between watering cycles
  */
 struct Plant{
-  Plant() : owner("NA"), is_empty(true){}
-  Plant(String own, uint8_t cell_num, uint8_t pos, float gal, float period) :is_empty(false)
-  { owner = own; cell = cell_num; position = pos; gal_per_period = gal; water_period = period;}
+  Plant() : owner("NA"){}
+  Plant(String own, uint8_t pos, float gal, float period)
+  { owner = own; position = pos; gal_per_period = gal; water_period = period;}
   Plant(const Plant &p){
     this->owner = p.owner;
-    this->cell = p.cell;
     this->position = p.position;
     this->gal_per_period = p.gal_per_period;
     this->water_period = p.water_period;
-    this->is_empty = p.is_empty;
     this->is_scheduled = p.is_scheduled;
     this->schedule = p.schedule;
   }
   String owner;
-  uint8_t cell;
   uint8_t position;
   float gal_per_period;
   float water_period;
-
-  bool is_empty;
   bool is_scheduled = false;
   time_t schedule = -1;
 };
@@ -83,7 +78,7 @@ public:
   void Activate();
 
   // Operator Overloading
-  GardenCell & operator+=(Plant *pplant);
+  GardenCell & operator+=(Plant *pplant); //TODO add, specify position
   GardenCell & operator-=(Plant *pplant);
 private:
   // Pointers to components

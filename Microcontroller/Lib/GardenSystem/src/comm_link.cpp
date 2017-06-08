@@ -62,7 +62,7 @@ void CommLink::PlantOperation(JsonObject &root){
     float gal_per_period = root["gal"];
     uint8_t water_period = root["period"];
     // Construct new plant
-    Plant *pplant = new Plant(owner, cell, position, gal_per_period, water_period);
+    Plant *pplant = new Plant(owner, position, gal_per_period, water_period);
     // Copy plant into requested cell and position
     pg_s_->get_cell(cell) += pplant;
   }

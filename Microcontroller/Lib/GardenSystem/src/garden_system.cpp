@@ -64,6 +64,18 @@ void GardenSystem::Update(){
   }
 }
 
+/* Adds the input plant pointer to the specified garden cell reference
+ */
+void GardenSystem::AddPlantToCell(Plant *pplant, GardenCell &rgarden_cell){
+  rgarden_cell += pplant;
+}
+
+/* Removes the input plant pointer from the specified garden cell reference
+ */
+void GardenSystem::RemovePlantFromCell(Plant *pplant, GardenCell &rgarden_cell){
+   rgarden_cell -= pplant;
+}
+
 //=================== E M E R G E N C Y  F U N C T I O N S ===================//
 
 /*

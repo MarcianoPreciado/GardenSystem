@@ -20,6 +20,8 @@ public:
 
   // Critical Functions
   static void Update();
+  static void AddPlantToCell(Plant *pplant, GardenCell &rgarden_cell);
+  static void RemovePlantFromCell(Plant *pplant, GardenCell &rgarden_cell);
 
   // Emergency Functions
   static void Deactivate();
@@ -62,15 +64,7 @@ public:
       Serial.println(pgarden_cells_[i]->get_cell_num());
     }
   }
-  // Add plant to system,
-  GardenSystem &operator+=(Plant *pplant){
-    (*pgarden_cells_[pplant->cell]) += pplant;
-    return *this;
-  }
-  GardenSystem &operator-=(Plant *pplant){
-    (*pgarden_cells_[pplant->cell]) -= pplant;
-    return *this;
-  }
+
 private:
   // Pointer to contained pump
    static Pump *ppump_;
