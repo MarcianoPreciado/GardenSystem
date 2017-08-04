@@ -103,7 +103,7 @@ void CommLink::CellOperation(JsonObject &root){
       flow_rate[i] = root["flowrate"][i];
     }
     // Make dynamic lights
-    Lights *plights = new Lights(lights_pin);
+    Lights *plights = new Lights(lights_pin, 5);
     // Make dynamic solenoid arrays
     ValveArray *pv_array = new ValveArray(num_valves, pins, flow_rate);
     // Make dynamic cell

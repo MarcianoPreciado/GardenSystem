@@ -8,7 +8,7 @@
 #include "components/lights.h"
 #include "components/pump.h"
 #include "garden_cell.h"
-#include "comm_link.h"
+//#include "comm_link.h"
 #include "garden_system.h"
 
 Pump * GardenSystem::ppump_;
@@ -55,12 +55,18 @@ GardenCell *GardenSystem::get_cell_ptr(uint8_t pos){
  * operations. To be called regularly, ie. insert in loop();
  */
 void GardenSystem::Update(){
-  // If active, update ...
+  // If active, update and check if the cells need water.
+  // If one of them needs water, turn the pump on.
   if(is_on_){
-    // TODO: finish
+    bool need_water = false;
     for(int i = 0; i < num_cells_; i++){
       pgarden_cells_[i]->Update();
+      need_water |= pgarden_cells_[i]->needs_water();
     }
+    if(need_water && !ppump_->is_active())
+      ppump_->Activate();
+    else if (!need_water && ppump_->is_active())
+      ppump_->Deactivate();
   }
 }
 

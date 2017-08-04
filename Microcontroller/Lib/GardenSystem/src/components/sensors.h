@@ -84,4 +84,11 @@ public:
   }
 };
 
+class FlowSensor : public AnalogSensor {
+public:
+
+private:
+
+};
+
 #endif

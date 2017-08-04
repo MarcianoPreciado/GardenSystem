@@ -24,7 +24,7 @@ public:
   void set_off_pin(int pin)
     { off_pin_ = pin; }
 
-  // Critical Functions TODO: Fix for actual lights
+  // Critical Functions
   void Activate()
     { TripPin(on_pin_); is_active_ = true; }
   void Deactivate()
@@ -34,7 +34,8 @@ private:
   uint8_t on_pin_;
   uint8_t off_pin_;
   bool is_active_;
-  TripPin(uint8_t pin){
+
+  void TripPin(uint8_t pin){
     digitalWrite(pin, HIGH);
     delay(20);
     digitalWrite(pin, LOW);

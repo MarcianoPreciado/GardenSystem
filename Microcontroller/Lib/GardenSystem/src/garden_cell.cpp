@@ -11,12 +11,17 @@ GardenCell::GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *pligh
   // Assign Components
   pvalve_array_ = pvalve_array;
   plights_ = plights;
+  lights_on_ = plights->is_active();
   // Allocate memory for plant pointers, fill with nullptrs
   pplants_ = new Plant*[capacity_];
-  for(int i = 0; i < capacity_; i++)
-    pplants_[i] = nullptr;
-  // Allocate memory for water stop times
+  // Allocate memory for water start/stop times
+  water_start_times_ = new time_t[capacity_];
   water_stop_times_ = new time_t[capacity_];
+  for(int i = 0; i < capacity_; i++){
+    pplants_[i] = nullptr;
+    water_start_times_[i] = 0;
+    water_stop_times_[i] = 0;
+  }
 }
 
 GardenCell::~GardenCell(){
@@ -57,6 +62,14 @@ Plant *GardenCell::get_plant(uint8_t pos) const{
   return pplants_[pos];
 }
 
+time_t GardenCell::get_plant_water_start_time(uint8_t pos) const{
+  return water_start_times_[pos];
+}
+
+time_t GardenCell::get_plant_water_stop_time(uint8_t pos) const{
+  return water_stop_times_[pos];
+}
+
 double GardenCell::get_temp_val() const{
   if(has_temp_sensor_){
     return ptemp_sensor_->get_val();
@@ -87,8 +100,8 @@ bool GardenCell::is_lighting() const{
   return plights_->is_active();
 }
 
-bool GardenCell::is_watering() const{
-  return watering_;
+bool GardenCell::needs_water() const{
+  return needs_water_;
 }
 
 void GardenCell::set_lights_on_time(uint8_t hr, uint8_t mn){
@@ -117,11 +130,41 @@ void GardenCell::set_light_sensor(LightSensor *pl_s){
  * scheduled to be activated/deactivated or opened/closed.
  */
 void GardenCell::Update(){
-  if(plights_->is_active() && hour() >= lights_stop_tm_[0] && minute() >= lights_stop_tm_[1])
-    DeactivateLights();
-  else if(!plights_->is_active() && hour() >= lights_start_tm_[0] && minute() >= lights_start_tm_[1])
+  /* if the lights are on, and it is past time to shut the lights off
+   * turn the lights off */
+  if((hour() == lights_stop_tm_[0] && minute() >= lights_stop_tm_[1]) ||
+    hour() > lights_stop_tm_[0]){
+    if(lights_on_)
+      DeactivateLights();
+  }
+  /* if the lights aren't on, it is past time to turn the lights on, and not
+   * yet late enough to turn the lights off, turn the lights on */
+  else if(!(lights_on_) &&
+  ((hour() == lights_start_tm_[0] && minute() >= lights_start_tm_[1]) ||
+  hour() > lights_start_tm_[0])){
     ActivateLights();
-  // TODO: add solenoid valve update functionality
+  }
+
+  /* Checks to see if any of the solenoids should be open, if so it opens them
+   * and sets still_watering true.
+   * Reschedules watering times if needed. */
+  bool still_watering = false;
+  for(int i = 0; i < capacity_; i++){
+    // Make sure we have a plant in the position
+    if(pplants_[i]){
+      // If the plant is scheduled to stop earlier than now
+      if(water_stop_times_[i] <= now()){
+        Schedule(pplants_[i]);
+        pvalve_array_->CloseValve(i);
+      }
+      // If the plant is scheduled to start earlier than now
+      else if(water_start_times_[i] <= now()){
+        still_watering = true;
+        pvalve_array_->OpenValve(i);
+      }
+    }
+  }
+  needs_water_ = still_watering;
 }
 
 void GardenCell::WaterPlants(){
@@ -131,14 +174,30 @@ void GardenCell::WaterPlants(){
 
 void GardenCell::ActivateLights(){
   plights_->Activate();
+  lights_on_ = true;
 }
 
 void GardenCell::DeactivateLights(){
   plights_->Deactivate();
+  lights_on_ = false;
 }
 
-void GardenCell::Schedule(){
+void GardenCell::Schedule(Plant *pplant){
   // TODO: fill in
+  uint8_t pos = pplant->position;
+  float rate = pvalve_array_->get_flow_rate(pos); // Gal/Hr
+  long duration = (pplant->gal_per_period) * rate * 60 * 60; // In seconds
+
+  // tmp = right now + water_period days, final units in seconds
+  time_t tmp = now() + pplant->water_period * 24 * 60 * 60;
+  tmElements_t tmp_tm;
+  breakTime(tmp, tmp_tm);
+  tmp_tm.Second = 0;
+  tmp_tm.Minute = lights_start_tm_[1];
+  tmp_tm.Hour = lights_start_tm_[0];
+  tmp = makeTime(tmp_tm);
+  water_start_times_[pos] = tmp; // Water start time
+  water_stop_times_[pos] = tmp + duration; // Water stop time
 }
 
 //=================== E M E R G E N C Y  F U N C T I O N S ===================//
@@ -169,7 +228,7 @@ GardenCell &GardenCell::operator+=(Plant *pplant){
   if(this->pplants_[pos] == nullptr){
     this->pplants_[pos] = pplant;
     this->num_plants_ ++;
-    this->Schedule();
+    Schedule(pplant);
   }
   return *this;
 }

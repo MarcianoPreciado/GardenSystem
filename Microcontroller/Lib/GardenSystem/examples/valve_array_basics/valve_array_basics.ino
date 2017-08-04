@@ -9,9 +9,9 @@
  */
 #include "garden_system.h"
 
-int num_valves = 3;
-int * pins = new int[3]{13,12,11};
-float * rates = new float[3]{0.5,0.5,0.5};
+uint8_t num_valves = 2;
+uint8_t * pins = new uint8_t[num_valves]{13,12};
+float * rates = new float[num_valves]{0.5,0.5};
 ValveArray v_array(num_valves, pins, rates);
 
 void setup() {
@@ -20,11 +20,11 @@ void setup() {
 }
 
 void loop() {
-  for(int i = 0; i < 3; i++){
+  for(uint8_t i = 0; i < num_valves; i++){
     v_array.OpenValve(i);
     delay(500);
   }
-  for(int i = 0; i < 3; i++){
+  for(uint8_t i = 0; i < num_valves; i++){
     v_array.CloseValve(i);
     delay(500);
   }

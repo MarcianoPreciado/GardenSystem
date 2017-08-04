@@ -51,6 +51,8 @@ public:
   uint8_t get_num_plants() const;
   uint8_t get_cell_num() const;
   Plant *get_plant(uint8_t pos) const;
+  time_t get_plant_water_start_time(uint8_t pos) const;
+  time_t get_plant_water_stop_time(uint8_t pos) const;
   double get_temp_val() const;
   double get_light_val() const;
 
@@ -58,7 +60,7 @@ public:
   bool has_light_sensor();
 
   bool is_lighting() const;
-  bool is_watering() const;
+  bool needs_water() const;
   bool is_active() const;
 
   void set_lights_on_time(uint8_t hr, uint8_t mn);
@@ -89,10 +91,11 @@ private:
 
   // Dynamic arrays (use operator new)
   Plant **pplants_;
-  time_t *water_stop_times_;
+  volatile time_t *water_stop_times_;
+  volatile time_t *water_start_times_;
 
-  bool lights_on_ = false;
-  bool watering_ = false;
+  bool lights_on_;
+  volatile bool needs_water_ = false;
   bool has_light_sensor_ = false;
   bool has_temp_sensor_ = false;
 
@@ -106,7 +109,7 @@ private:
   // Default lighting stop time is 9:00 PM
   uint8_t lights_stop_tm_[2] = {21, 0};
 
-  void Schedule();
+  void Schedule(Plant *pplant);
 };
 
 #endif

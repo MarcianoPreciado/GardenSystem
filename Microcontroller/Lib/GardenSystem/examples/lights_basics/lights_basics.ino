@@ -8,8 +8,9 @@
  */
  #include "garden_system.h"
 
-const uint8_t led_pin = 13;
- Lights light(led_pin);
+const uint8_t light_on_pin = 13;
+const uint8_t light_off_pin = 12;
+ Lights light(light_on_pin, light_off_pin);
 
  void setup(){
    Serial.begin(9600);
