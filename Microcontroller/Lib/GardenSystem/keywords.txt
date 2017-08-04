@@ -1,0 +1,50 @@
+#######################################
+# Syntax Coloring Map for garden_system.h
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+GardenSystem	KEYWORD1
+GardenCell	KEYWORD1
+Plant	KEYWORD1
+Pump	KEYWORD1
+Lights	KEYWORD1
+ValveArray	KEYWORD1
+Valve	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+Update	KEYWORD2
+WaterPlants	KEYWORD2
+ActivateLights	KEYWORD2
+DeactivateLights	KEYWORD2
+ActivateCell	KEYWORD2
+DeactivateCell	KEYWORD2
+get_capacity	KEYWORD2
+get_availability	KEYWORD2
+get_plant	KEYWORD2
+get_cell	KEYWORD2
+get_num_plants	KEYWORD2
+is_lighting	KEYWORD2
+is_watering	KEYWORD2
+set_lights_on_time	KEYWORD2
+set_lights_off_time	KEYWORD2
+OpenValve	KEYWORD2
+CloseValve	KEYWORD2
+get_pin	KEYWORD2
+set_pin	KEYWORD2
+get_flow_rate	KEYWORD2
+is_open	KEYWORD2
+Activate	KEYWORD2
+Deactivate	KEYWORD2
+is_on	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
