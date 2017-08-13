@@ -4,6 +4,7 @@
 #include "components/valve.h"
 #include "components/lights.h"
 #include "components/sensors.h"
+#include "components/fan.h"
 
 GardenCell::GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *plights){
   cell_num_ = cell_num;
@@ -23,6 +24,29 @@ GardenCell::GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *pligh
     water_stop_times_[i] = 0;
   }
 }
+
+GardenCell::GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *plights,
+  Fan *pfan_in, Fan *pfan_out){
+    cell_num_ = cell_num;
+    capacity_ = pvalve_array->get_size();
+    // Assign Components
+    pvalve_array_ = pvalve_array;
+    plights_ = plights;
+    lights_on_ = plights->is_active();
+    pfan_in_ = pfan_in;
+    pfan_out_ = pfan_out;
+    has_fans_ = true;
+    // Allocate memory for plant pointers, fill with nullptrs
+    pplants_ = new Plant*[capacity_];
+    // Allocate memory for water start/stop times
+    water_start_times_ = new time_t[capacity_];
+    water_stop_times_ = new time_t[capacity_];
+    for(int i = 0; i < capacity_; i++){
+      pplants_[i] = nullptr;
+      water_start_times_[i] = 0;
+      water_stop_times_[i] = 0;
+    }
+  }
 
 GardenCell::~GardenCell(){
   // Delete each plant
@@ -92,6 +116,14 @@ bool GardenCell::has_light_sensor(){
   return has_light_sensor_;
 }
 
+bool GardenCell::has_fans(){
+  return has_fans_;
+}
+
+bool GardenCell::is_fanning() const {
+  return fans_on_;
+}
+
 bool GardenCell::is_active() const{
   return is_active_;
 }
@@ -122,6 +154,10 @@ void GardenCell::set_temp_sensor(TempSensor *pt_s){
 void GardenCell::set_light_sensor(LightSensor *pl_s){
   plight_sensor_ = pl_s;
   has_light_sensor_ = true;
+}
+
+void GardenCell::set_fan_preset(FanPreset fan_preset){
+  fan_preset_ = fan_preset;
 }
 
 //==================== C R I T I C A L  F U N C T I O N S ====================//
@@ -158,6 +194,49 @@ void GardenCell::Update(){
         still_watering = true;
         pvalve_array_->OpenValve(i);
       }
+    }
+  }
+  /* Checks if the cell owns any fans, and if so, updates their state based on
+   * the fan preset*/
+  if(has_fans_){
+    switch (fan_preset_) {
+      case ALWAYS_ON:
+        if(!fans_on_){
+          pfan_in_->Activate();
+          pfan_out_->Activate();
+          fans_on_ = true;
+        }
+        break;
+      case ALL_DAY:
+        if(is_day() && !fans_on_){
+          pfan_in_->Activate();
+          pfan_out_->Activate();
+          fans_on_ = true;
+        }
+        else if(is_night() && fans_on_){
+          pfan_in_->Deactivate();
+          pfan_out_->Deactivate();
+          fans_on_ = false;
+        }
+        break;
+      case ALL_NIGHT:
+        if(is_day() && fans_on_){
+          pfan_in_->Deactivate();
+          pfan_out_->Deactivate();
+          fans_on_ = false;
+        }
+        else if(is_night() && !fans_on_){
+          pfan_in_->Activate();
+          pfan_out_->Activate();
+          fans_on_ = true;
+        }
+        break;
+      case DAILY:
+        break;
+      case NIGHTLY:
+        break;
+      case MANUAL:
+        break;
     }
   }
   needs_water_ = still_watering;

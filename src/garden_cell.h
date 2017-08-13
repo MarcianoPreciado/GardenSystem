@@ -5,7 +5,7 @@
 #include "components/valve.h"
 #include "components/lights.h"
 #include "components/sensors.h"
-
+#include "components/fan.h"
 
  /* Plant struct
  * @Params
@@ -42,8 +42,13 @@ struct Plant{
 class GardenCell{
 public:
   // Constructor/Destructor
-  GardenCell(uint8_t cell_num, ValveArray *valve_array, Lights *lights);
+  GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *plights);
+  GardenCell(uint8_t cell_num, ValveArray *pvalve_array, Lights *plights,
+    Fan *pfan_in, Fan *pfan_out);
   ~GardenCell();
+
+  // Enumerations
+  enum FanPreset { MANUAL, DAILY, NIGHTLY, ALWAYS_ON, ALL_DAY, ALL_NIGHT};
 
   // Accessors
   uint8_t get_capacity() const;
@@ -58,7 +63,9 @@ public:
 
   bool has_temp_sensor();
   bool has_light_sensor();
+  bool has_fans();
 
+  bool is_fanning() const;
   bool is_lighting() const;
   bool needs_water() const;
   bool is_active() const;
@@ -67,7 +74,7 @@ public:
   void set_lights_off_time(uint8_t hr, uint8_t mn);
   void set_temp_sensor(TempSensor *pt_s);
   void set_light_sensor(LightSensor *pl_s);
-
+  void set_fan_preset(FanPreset fan_preset);
 
   // Critical Functions
   void Update();
@@ -91,6 +98,8 @@ private:
   Lights *plights_;
   TempSensor *ptemp_sensor_;
   LightSensor *plight_sensor_;
+  Fan *pfan_in_;
+  Fan *pfan_out_;
 
   // Dynamic arrays (use operator new)
   Plant **pplants_;
@@ -102,6 +111,8 @@ private:
   volatile bool needs_water_ = false;
   bool has_light_sensor_ = false;
   bool has_temp_sensor_ = false;
+  bool has_fans_ = false;
+  bool fans_on_ = false;
 
   uint8_t cell_num_;
   uint8_t capacity_;
@@ -113,6 +124,7 @@ private:
   // Default lighting stop time is 9:00 PM
   uint8_t lights_stop_tm_[2] = {21, 0};
 
+  FanPreset fan_preset_ = ALWAYS_ON;
   void Schedule(Plant *pplant);
 };
 
