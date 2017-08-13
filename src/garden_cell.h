@@ -71,7 +71,6 @@ public:
 
   // Critical Functions
   void Update();
-  void WaterPlants();
   void ActivateLights();
   void DeactivateLights();
 
@@ -82,6 +81,10 @@ public:
   // Operator Overloading
   GardenCell & operator+=(Plant *pplant); //TODO add, specify position
   GardenCell & operator-=(Plant *pplant);
+
+  // Misc
+  bool is_day();
+  bool is_night();
 private:
   // Pointers to components
   ValveArray *pvalve_array_;
@@ -94,6 +97,7 @@ private:
   volatile time_t *water_stop_times_;
   volatile time_t *water_start_times_;
 
+  // Booleans for contained objects
   bool lights_on_;
   volatile bool needs_water_ = false;
   bool has_light_sensor_ = false;

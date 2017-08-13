@@ -132,16 +132,12 @@ void GardenCell::set_light_sensor(LightSensor *pl_s){
 void GardenCell::Update(){
   /* if the lights are on, and it is past time to shut the lights off
    * turn the lights off */
-  if((hour() == lights_stop_tm_[0] && minute() >= lights_stop_tm_[1]) ||
-    hour() > lights_stop_tm_[0]){
-    if(lights_on_)
-      DeactivateLights();
+  if(is_night() && lights_on_){
+    DeactivateLights();
   }
   /* if the lights aren't on, it is past time to turn the lights on, and not
    * yet late enough to turn the lights off, turn the lights on */
-  else if(!(lights_on_) &&
-  ((hour() == lights_start_tm_[0] && minute() >= lights_start_tm_[1]) ||
-  hour() > lights_start_tm_[0])){
+  else if(!(lights_on_) && is_day()){
     ActivateLights();
   }
 
@@ -165,11 +161,6 @@ void GardenCell::Update(){
     }
   }
   needs_water_ = still_watering;
-}
-
-void GardenCell::WaterPlants(){
-  //float flow_rate = pvalve_array_->get_flow_rate(i);
-  //int duration = plants_[i].gal_per_period / flow_rate;
 }
 
 void GardenCell::ActivateLights(){
@@ -243,4 +234,36 @@ GardenCell &GardenCell::operator-=(Plant *pplant){
   this->pplants_[pos] = nullptr;
   this->num_plants_ --;
   return *this;
+}
+
+//===================== P R I V A T E  F U N C T I O N S =====================//
+
+bool GardenCell::is_day(){
+  tmElements_t dusk; breakTime(now(), dusk);
+  dusk.Hour = lights_stop_tm_[0];
+  dusk.Minute = lights_stop_tm_[1];
+  dusk.Second = 0;
+  tmElements_t dawn; breakTime(now(), dawn);
+  dawn.Hour = lights_start_tm_[0];
+  dawn.Minute = lights_start_tm_[1];
+  dawn.Second = 0;
+  time_t dawn_tm = makeTime(dawn);
+  time_t dusk_tm = makeTime(dusk);
+
+  return (now() >= dawn_tm && now() < dusk_tm);
+}
+
+bool GardenCell::is_night(){
+  tmElements_t dusk; breakTime(now(), dusk);
+  dusk.Hour = lights_stop_tm_[0];
+  dusk.Minute = lights_stop_tm_[1];
+  dusk.Second = 0;
+  tmElements_t dawn; breakTime(now(), dawn);
+  dawn.Hour = lights_start_tm_[0];
+  dawn.Minute = lights_start_tm_[1];
+  dawn.Second = 0;
+  time_t dawn_tm = makeTime(dawn);
+  time_t dusk_tm = makeTime(dusk);
+
+  return (now() < dawn_tm || now() >= dusk_tm);
 }
